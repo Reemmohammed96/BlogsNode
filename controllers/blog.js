@@ -55,7 +55,7 @@ const getBlogs = async (query, pagination, author) => {
     return comment
  }
 const like=(blogid)=>{
-return   Blog.findByIdAndUpdate(blogid,{$push:{likes:1}},{new:true}).exec()
+return   Blog.findByIdAndUpdate(blogid,{$inc:{likes:1}},{new:true}).exec()
 
 
 }
