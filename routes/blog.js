@@ -99,7 +99,7 @@ router.get('/:id', async(req, res, next) => {
         next(e);
     }
 });
-router.get('/:title', async(req, res, next) => {
+router.get('/search/:title', async(req, res, next) => {
     const { params: { title } } = req
     try {
         const user = await getBytitle(title);

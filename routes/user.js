@@ -27,7 +27,7 @@ const upload=multer({storage:storage })
   .catch(e => next(e));
   
  });*/
- router.post('/',upload.single('userImg'),async (req, res, next) => { 
+ router.post('/add',upload.single('userImg'),async (req, res, next) => { 
   const { body ,file} = req;
   body.userImg=file.path
 
