@@ -91,7 +91,7 @@ router.get('/', async(req, res, next) => {
     }
 });
 router.get('/:id', async(req, res, next) => {
-    const { params: { id } } = req
+    const { params: { id } } = req 
     try {
         const user = await getmyblog(id);
         res.json(user);

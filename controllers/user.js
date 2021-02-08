@@ -27,12 +27,12 @@ const follow = (userid,followid) => {
    User.findByIdAndUpdate(userid,{$addToSet:{following:followid}},{new:true}).exec()   
    User.findByIdAndUpdate(followid,{$addToSet:{follower:userid}},{new:true}).exec()   
    
-return("status:followed")
+return(User.findById(followid).exec())
 }
 const unfollow = (userid,followid) => {
    User.findByIdAndUpdate(userid,{$pull:{following:followid}},{new:true}).exec()   
    User.findByIdAndUpdate(followid,{$pull:{follower:userid}},{new:true}).exec()   
-return("status:unfollowe")
+return(User.findById(followid)).exec()
 }
 const getfollowers=async(id)=>{
    const {follower}=await getById(id)
