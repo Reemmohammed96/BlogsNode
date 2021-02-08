@@ -37,7 +37,7 @@ const upload = multer({ storage: storage })
 });*/
 router.post('/add', upload.single('blogImg'), async(req, res, next) => {
     const { body, file, user: { id, username, userImg } } = req
-    body.blogImg = file.path
+    body.blogImg = file?.path
     try {
         const user = await create({...body, userId: id, Author: username, authorImg: userImg });
         res.json(user);
@@ -108,9 +108,11 @@ router.get('/search/:title', async(req, res, next) => {
         next(e);
     }
 });
-router.patch('/:ids', async(req, res, next) => {
+router.patch('/:ids', upload.single('blogImg'),async(req, res, next) => {
     debugger
-    const { params: { ids }, body, user: { id } } = req
+    const { params: { ids }, body, user: { id },file } = req
+    body.blogImg = file?.path
+
     try {
         const user = await update(ids, body, id);
         res.json(user);

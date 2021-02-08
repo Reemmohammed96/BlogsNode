@@ -24,7 +24,7 @@ const userSchema = new Schema({
     //  match:[/\s+@\s+\.\s+/]
     },
     userImg:{
-      type:String
+      type:String,
     },
     firstname: {
       type: String,
