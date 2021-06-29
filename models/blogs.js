@@ -8,7 +8,11 @@ const blogSchema = new Schema({
     },    
     body:{
         type:String,
-        maxlength:140
+        maxlength:14000
+    },
+    likeFlag:{
+        type:String,
+        default:"unlike"
     },
     tags:[String],
     blogImg:{
@@ -39,19 +43,8 @@ const blogSchema = new Schema({
        },
        AuthorName:String
     }],
-    likes:[{
-        
-            type:Number,
-            default:0,
-       
-        AuthorName:String,
-        AuthorId:{
-            type:Schema.Types.ObjectId,
-            ref:'User'
-        },
-        AuthorImg:String,
-        
-    }]
+    likes: [{type:Schema.Types.ObjectId, ref: 'user'}],
+    
 })
 const blogModel = mongoose.model('Blog', blogSchema);
  module.exports = blogModel;

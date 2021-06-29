@@ -5,7 +5,7 @@ const asyncSign = promisify(jwt.sign);
 const create = (user) => User.create(user);
 const getAll =() => User.find({}).exec()
 const getById = (id) => User.findById(id).exec()
-const update =(id,data) => User.findByIdAndUpdate(id,data , {new:true})
+const update =(id,data) => User.findByIdAndUpdate(id,data , {new:true}).exec()
 const deleteOne= (id) => User.findByIdAndRemove(id).exec()
 const login =async ({username,password}) =>{
    const user =await User.findOne({username}).exec()
@@ -32,7 +32,7 @@ return(User.findById(followid).exec())
 const unfollow = (userid,followid) => {
    User.findByIdAndUpdate(userid,{$pull:{following:followid}},{new:true}).exec()   
    User.findByIdAndUpdate(followid,{$pull:{follower:userid}},{new:true}).exec()   
-return(User.findById(followid)).exec()
+return(User.findById(followid).exec())
 }
 const getfollowers=async(id)=>{
    const {follower}=await getById(id)

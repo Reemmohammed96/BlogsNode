@@ -1,11 +1,19 @@
 const Blog=require('../models/blogs')
 const saveimg =(img) => Blog.product = img.path.exec()
-const create = (user) => Blog.create(user);
+const create = (user) =>Blog.create(user);
 const getmyblog =(id) => Blog.findById(id).exec()
+const getfollowingblogs =async(query,followingsIds) =>{
+   return Blog.find(query).where('userId').in(followingsIds).sort([['createdAt',-1]]).exec()
+}
 
-const getAll =(query) => Blog.find(query).exec()
+const getAll =(query) =>  Blog.find(query).sort([['createdAt',-1]]).exec()
+const getUserBlogs=(userId) =>
+Blog.find({userId}).exec()
 const getBytitle = (title) => Blog.find({title}).exec()
 var newblog
+const update=(id,data)=> Blog.findByIdAndUpdate(id,data,{new:true}).exec()
+
+/*
 const update =(id,data,userid) => {
    myblog=Blog.findById(id,function(err,res){
       try{
@@ -21,7 +29,7 @@ const update =(id,data,userid) => {
 
    return(myblog)
 } 
-   
+   */
 const deleteOne= (id,userid) =>{ 
    myblog=Blog.findById(id,function(err,res){
       try{
@@ -54,11 +62,30 @@ const getBlogs = async (query, pagination, author) => {
     Blog.updateOne ({_id:blogid},{$push:{comments:comment}}).exec()
     return comment
  }
-const like=(blogid)=>{
-return   Blog.findByIdAndUpdate(blogid,{$inc:{likes:1}},{new:true}).exec()
-
+ const likeBlog = async (uid, blogid) => {
+   await Blog.findByIdAndUpdate(blogid, { $addToSet: { likes: uid } }, { new: true })
+       .exec().then().catch(e => {
+           throw new Error("Caught error in likeBlog :"+ e.message)
+       })
+   return {
+       "status": "liked"
+   }
 
 }
+const unlikeBlog = async (uid, blogid) => {
+   await Blog.findByIdAndUpdate(blogid, { $pull: { likes: uid } }, { new: true })
+       .exec().then().catch(e => {
+           throw new Error("Caught error in likeBlog :"+ e.message)
+       })
+   return {
+       "status": "unliked"
+   }
+
+}
+
+
+
+
 
 module.exports={
    create,
@@ -70,5 +97,8 @@ module.exports={
    getBlogs,
    getmyblog,
    createcomment,
-   like
+   likeBlog,
+   unlikeBlog,
+   getUserBlogs,
+   getfollowingblogs
 } 

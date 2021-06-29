@@ -1,5 +1,5 @@
 const express = require('express');
-const { create, getAll, getBytitle, update, deleteOne, getBlogs, getmyblog, createcomment, like } = require('../controllers/blog')
+const { create, getAll, getBytitle, update, deleteOne ,getfollowingblogs, unlikeBlog ,getUserBlogs,likeBlog,getBlogs, getmyblog, createcomment, like } = require('../controllers/blog')
 const router = express.Router();
 const authMiddleware = require('../middlewares/auth')
 
@@ -48,6 +48,7 @@ router.post('/add', upload.single('blogImg'), async(req, res, next) => {
 router.post('/comment/:blogid', async(req, res, next) => {
     debugger
     let { body, user: { id, username, userImg }, params: { blogid } } = req
+    console.log(body)
     try {
         const user = await createcomment({...body, AuthorId: id, AuthorImg: userImg, AuthorName: username }, blogid)
         res.json(user);
@@ -57,20 +58,24 @@ router.post('/comment/:blogid', async(req, res, next) => {
 });
 router.post('/like/:blogid', async(req, res, next) => {
     debugger
-    let { user: { id, username, userImg }, params: { blogid } } = req
+    let { user: { id }, params: { blogid } } = req
     try {
-        const user = await like(blogid, { AuthorId: id, AuthorImg: userImg, AuthorName: username })
+        const user = await likeBlog(id,blogid)
         res.json(user);
     } catch (e) {
         next(e)
     }
 });
-
-
-
-
-
-
+router.post('/unlike/:blogid', async(req, res, next) => {
+    debugger
+    let { user: { id }, params: { blogid } } = req
+    try {
+        const user = await unlikeBlog(id,blogid)
+        res.json(user);
+    } catch (e) {
+        next(e)
+    }
+});
 
 /*router.post('/', upload.single('product'),async (req, res, next) => { 
      const { body ,user:{ id }} = req;
@@ -90,6 +95,24 @@ router.get('/', async(req, res, next) => {
         next(e);
     }
 });
+router.get('/followingBlogs',async(req,res,next)=>{
+    const { user: { id } } = req
+    try{
+        const blogs=await getfollowingblogs({ userId: id },req.user.following)
+        res.json(blogs)
+    }catch(e){
+        next(e);
+    }
+})
+router.get('/userBlogs/:id',async(req,res,next)=>{
+    const { params: { id } }=req
+    try{
+        const user=await getUserBlogs(id);
+        res.json(user);
+    }catch(e){
+        next(e);
+    }
+})
 router.get('/:id', async(req, res, next) => {
     const { params: { id } } = req 
     try {

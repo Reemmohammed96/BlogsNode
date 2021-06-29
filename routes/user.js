@@ -1,5 +1,5 @@
 const express= require('express');
-const{create,getAll,getById,update,deleteOne,login,follow ,getfollowers, getfollowing}=require('../controllers/user')
+const{create,getAll,getById,update,deleteOne,login,follow,unfollow ,getfollowers, getfollowing}=require('../controllers/user')
 const router=express.Router();
 const mongoose=require('mongoose')
 const userr=require('../models/users')
@@ -73,7 +73,7 @@ try {
   next(e);
 }
 });
-  router.patch('/:id',upload.single('userImg'), async (req, res, next) => {
+  router.patch('/edit/:id',upload.single('userImg'), async (req, res, next) => {
     const {params : {id},body,file }=req
     body.userImg=file?.path
 
